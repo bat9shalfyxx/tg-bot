@@ -1,10 +1,13 @@
 import "dotenv/config";
 import process from "node:process";
-import { Bot } from "grammy";
+import { Bot, session } from "grammy";
 
-import type { BotContext } from "./types/bot-types.js";
+import type { BotContext, SessionData } from "./types/bot-types.js";
+import { AiAnswerHandler } from "./handlers/ai-answer.js";
 import { startHandler } from "./handlers/start.js";
-import { askDeepSeek } from "./services/ai.js";
+import { rollHandler } from "./handlers/roll.js";
+import { Hears } from "./consts/hears.js";
+import { helpHandler } from "./handlers/help.js";
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
@@ -14,20 +17,21 @@ if (!BOT_TOKEN) {
 
 export const bot = new Bot<BotContext>(BOT_TOKEN);
 
-bot.command("start", startHandler)
+bot.use(session<SessionData, BotContext>({
+    initial: () => ({
+        waitingForAI: false
+    })
+}))
 
-bot.on("message:text", async (ctx)=> {
-    const message = ctx.message.text;
+bot.command("start", startHandler);
+bot.command("roll", rollHandler);
+bot.command("help", helpHandler);
 
-    const processing = await ctx.reply("Услышал. Ты давай посиди пока, ща накатаю ответ...");
-    const deleteProcessingMessage = () => ctx.api.deleteMessage(ctx.chat!.id, processing.message_id);
+bot.hears(Hears.ROLL, rollHandler);
+bot.hears(Hears.HELP, helpHandler);
+bot.hears(Hears.AI_ASSISTANT, (ctx, next) => {
+    ctx.session.waitingForAI = true;
+    ctx.reply('Что тебе нужно?');   
+});
 
-    try {
-        const response = await askDeepSeek(message);
-        await ctx.reply(response);
-    } catch (error) {
-        console.error(error);
-    } finally {
-        deleteProcessingMessage();
-    }
-})
+bot.on("message:text", AiAnswerHandler);

@@ -16,7 +16,7 @@ const client = new OpenAI({
     baseURL: "https://models.github.ai/inference",
 });
 
-export async function askDeepSeek(userMessage: string): Promise<string> {
+export async function askGptChat(userMessage: string): Promise<string> {
     try {
         const response = await client.chat.completions.create({
             model: "gpt-4.1-mini",
