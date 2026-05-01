@@ -9,13 +9,19 @@
   "scripts": {
     "dev": "tsx watch --no-warnings src/index.ts",
     "build": "esbuild src/index.ts --bundle --platform=node --target=node22 --format=esm --outfile=deploy/index.js",
+
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
+
     "check": "biome check src/",
     "check:fix": "biome check --write src/",
     "check:ci": "biome ci src/",
-    "prepare": "npm run check:fix && npm run test && npm run build"
+
+    "prepare": "npm run check:fix && npm run test && npm run build",
+    
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
