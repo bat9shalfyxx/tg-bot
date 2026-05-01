@@ -1,0 +1,27 @@
+name: tg-bot | CI/CD pipeline
+run-name: ${{ github.actor }}'s CI/CD is running
+on: 
+  push:
+    branches: ["master"]
+  pull_request: ["master"]
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v6
+
+      - name: Update Node.js v[${{ matrix.node-version }}]
+        uses: actions/setup-node@v6
+        with: 
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: install modules
+        run: npm ci
+
+      - name: build project
+        run: npm run build
