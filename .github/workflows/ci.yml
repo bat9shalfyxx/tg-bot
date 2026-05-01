@@ -21,8 +21,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: install modules
+      - name: Install modules
         run: npm ci
 
-      - name: build project
+      - name: Run tests
+        run: npm run test
+
+      - name: Build project
         run: npm run build
+        continue-on-error: false

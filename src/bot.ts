@@ -6,8 +6,8 @@ import type { BotContext, SessionData } from "./types/bot-types.js";
 import { AiAnswerHandler } from "./handlers/ai-answer.js";
 import { startHandler } from "./handlers/start.js";
 import { rollHandler } from "./handlers/roll.js";
-import { Hears } from "./consts/hears.js";
 import { helpHandler } from "./handlers/help.js";
+import { Hears } from "./consts/hears.js";
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
@@ -29,7 +29,7 @@ bot.command("help", helpHandler);
 
 bot.hears(Hears.ROLL, rollHandler);
 bot.hears(Hears.HELP, helpHandler);
-bot.hears(Hears.AI_ASSISTANT, (ctx, next) => {
+bot.hears(Hears.AI_ASSISTANT, (ctx) => {
     ctx.session.waitingForAI = true;
     ctx.reply('Что тебе нужно?');   
 });

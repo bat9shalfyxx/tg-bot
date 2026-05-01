@@ -11,7 +11,7 @@ const keyboard = new Keyboard()
 
 export async function startHandler(ctx: BotContext) { 
     const name = ctx.from?.first_name ?? 'Червяк';
-    await ctx.replyWithPhoto('blob:https://web.telegram.org/4e53e494-3fc4-48f5-b4f9-6f8abefcdfe1');
+    await ctx.replyWithPhoto('https://i.ytimg.com/vi/mtJz0sMgEqY/maxresdefault.jpg');
     await ctx.reply(
         `Здарова, ${name}, че делать собираемся?
 
